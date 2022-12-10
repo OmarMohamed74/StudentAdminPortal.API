@@ -25,40 +25,78 @@ namespace StudentAdminPortal.API.Controllers
         {
           var students= await ManageStudents.GetAllStudentsAsync();
 
-          return Ok(_mapper.Map<List<StudentDTO>>(students));
-            
-            // Without AutoMapper
-
-            //var domainModelsStudents = new List<StudentDTO>();
-
-            //foreach(var student in students)
-            //{
-            //    domainModelsStudents.Add(new StudentDTO()
-            //    {
-            //        Id = student.Id,
-            //        FirstName = student.FirstName,
-            //        LastName = student.LastName,
-            //        DateOfBirth = student.DateOfBirth,
-            //        Email = student.Email,
-            //        Mobile = student.Mobile,
-            //        ProfileImgUrl = student.ProfileImgUrl,
-            //        GenderId = student.GenderId,
-            //        Address = new Address()
-            //        {
-            //            Id=student.Address.Id,
-            //            PhysicalAddress = student.Address.PhysicalAddress,
-            //            PostalAddress = student.Address.PostalAddress,
-            //        },
-            //        Gender= new Gender()
-            //        {
-            //            Id=student.Gender.Id,
-            //            Description=student.Gender.Description,
-            //        }     
-            //    });
-            //}
-
+          return Ok(_mapper.Map<List<StudentDTO>>(students));  
         }
 
+
+        [HttpGet]
+        [Route("[controller]/{studentId:guid}")]
+
+        public async Task<IActionResult> GetStudentAsync([FromRoute]Guid studentId)
+        {
+            var student = await ManageStudents.GetStudentByIdAsync(studentId);
+
+            if(student == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<StudentDTO>(student));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Without AutoMapper
+
+        //var domainModelsStudents = new List<StudentDTO>();
+
+        //foreach(var student in students)
+        //{
+        //    domainModelsStudents.Add(new StudentDTO()
+        //    {
+        //        Id = student.Id,
+        //        FirstName = student.FirstName,
+        //        LastName = student.LastName,
+        //        DateOfBirth = student.DateOfBirth,
+        //        Email = student.Email,
+        //        Mobile = student.Mobile,
+        //        ProfileImgUrl = student.ProfileImgUrl,
+        //        GenderId = student.GenderId,
+        //        Address = new Address()
+        //        {
+        //            Id=student.Address.Id,
+        //            PhysicalAddress = student.Address.PhysicalAddress,
+        //            PostalAddress = student.Address.PostalAddress,
+        //        },
+        //        Gender= new Gender()
+        //        {
+        //            Id=student.Gender.Id,
+        //            Description=student.Gender.Description,
+        //        }     
+        //    });
+        //}
 
 
 

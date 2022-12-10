@@ -6,6 +6,8 @@ namespace StudentAdminPortal.API.Repositories
     {
        Task< List<Student>> GetAllStudentsAsync();
 
+        Task<Student> GetStudentByIdAsync(Guid studentId);
+
 
     }
 }
