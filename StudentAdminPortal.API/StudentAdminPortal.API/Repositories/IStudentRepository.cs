@@ -4,9 +4,20 @@ namespace StudentAdminPortal.API.Repositories
 {
     public interface IStudentRepository
     {
-       Task< List<Student>> GetAllStudentsAsync();
+        // Student Signatures
+        Task< List<Student>> GetAllStudentsAsync();
 
         Task<Student> GetStudentByIdAsync(Guid studentId);
+
+        Task<Student> UpdateStudentAsync(Guid studentId, Student std);
+
+        Task<bool> isStudentExsists(Guid studentId);
+
+
+        //Gender Signatures
+        Task<List<Gender>> GetGendersAsync();
+
+
 
 
     }

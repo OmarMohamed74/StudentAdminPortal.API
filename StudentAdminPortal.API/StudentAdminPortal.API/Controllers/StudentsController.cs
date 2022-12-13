@@ -38,10 +38,32 @@ namespace StudentAdminPortal.API.Controllers
 
             if(student == null)
             {
-                return NotFound();
+                return NotFound(); 
             }
 
             return Ok(_mapper.Map<StudentDTO>(student));
+        }
+
+        [HttpPut]
+        [Route("[controller]/{studentId:guid}")]
+
+        public async Task<IActionResult> UpdateStudentASync([FromRoute] Guid studentId, [FromBody] UpdateStudentDTO updateStudentRequest)
+        {
+
+            if (await ManageStudents.isStudentExsists(studentId))
+            {
+                var updateStudent = await ManageStudents.UpdateStudentAsync(studentId, _mapper.Map<Student>(updateStudentRequest));
+                    
+                if (updateStudent != null)
+                {
+                    return Ok(_mapper.Map<Student>(updateStudent));
+                }
+
+                
+
+            }
+            return NotFound();
+
         }
 
 
