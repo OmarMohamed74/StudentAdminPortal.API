@@ -16,6 +16,8 @@ namespace StudentAdminPortal.API.Repositories
 
         Task<Student> DeleteStudentAsync(Guid studentId);
 
+        Task<Student> AddNewStudentAsync(Student newStudent);
+
 
         //Gender Signatures
         Task<List<Gender>> GetGendersAsync();

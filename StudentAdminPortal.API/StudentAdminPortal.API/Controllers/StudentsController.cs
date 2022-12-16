@@ -30,7 +30,7 @@ namespace StudentAdminPortal.API.Controllers
 
 
         [HttpGet]
-        [Route("[controller]/{studentId:guid}")]
+        [Route("[controller]/{studentId:guid}"), ActionName("GetStudentAsync")]
 
         public async Task<IActionResult> GetStudentAsync([FromRoute]Guid studentId)
         {
@@ -63,7 +63,7 @@ namespace StudentAdminPortal.API.Controllers
         [HttpPut]
         [Route("[controller]/{studentId:guid}")]
 
-        public async Task<IActionResult> UpdateStudentASync([FromRoute] Guid studentId, [FromBody] UpdateStudentDTO updateStudentRequest)
+        public async Task<IActionResult> UpdateStudentAsync([FromRoute] Guid studentId, [FromBody] UpdateStudentDTO updateStudentRequest)
         {
 
             if (await ManageStudents.isStudentExsists(studentId))
@@ -74,14 +74,22 @@ namespace StudentAdminPortal.API.Controllers
                 {
                     return Ok(_mapper.Map<Student>(updateStudent));
                 }
-
-                
-
             }
             return NotFound();
 
         }
+        [HttpPost]
+        [Route("[controller]/AddNewStudent")]
+        
+        public async Task<IActionResult> AddNewStudentAsync([FromBody] AddStudentDTO newStudent){
 
+            var student = await ManageStudents.AddNewStudentAsync(_mapper.Map<Student>(newStudent));
+
+            return CreatedAtAction(nameof(GetStudentAsync), new { studentId = student.Id },
+                _mapper.Map<Student>(student));
+            
+
+        }
 
 
 

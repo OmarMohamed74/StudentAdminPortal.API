@@ -18,6 +18,8 @@ namespace StudentAdminPortal.API.Profiles
 
             CreateMap<UpdateStudentDTO,Student>().AfterMap<UpdateStudentRequestAfterMap>();
 
+            CreateMap<AddStudentDTO,Student>().AfterMap<AddNewStudentAfterMap>();
+
 
         }
 
