@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentAdminPortal.API.DomainModels;
 using StudentAdminPortal.API.Models;
 using StudentAdminPortal.API.Repositories;
+using StudentAdminPortal.API.Repositories.Interfaces;
 
 namespace StudentAdminPortal.API.Controllers
 {
@@ -10,11 +11,13 @@ namespace StudentAdminPortal.API.Controllers
     public class StudentsController : Controller
     {
         private readonly IStudentRepository ManageStudents;
+        private readonly IImageRepository ManageImage;
         private readonly IMapper _mapper;
 
-        public StudentsController(IStudentRepository manageStudents,IMapper mapper)
+        public StudentsController(IStudentRepository manageStudents,IImageRepository manageImage,IMapper mapper)
         {
             ManageStudents = manageStudents;
+            ManageImage = manageImage;
             _mapper = mapper;
         }
 
@@ -88,7 +91,28 @@ namespace StudentAdminPortal.API.Controllers
             return CreatedAtAction(nameof(GetStudentAsync), new { studentId = student.Id },
                 _mapper.Map<Student>(student));
             
+        }
+        [HttpPost]
+        [Route("[controller]/{studentId:guid}/uploadStdImg")]
+        public async Task<IActionResult> UploadStdProfileImg([FromRoute] Guid studentId,IFormFile stdImgFile)
+        {
+            var student = await ManageStudents.GetStudentByIdAsync(studentId);
 
+            string fileName = student.FirstName + Path.GetExtension(stdImgFile.FileName);
+
+            if (await ManageStudents.isStudentExsists(studentId))
+            {
+                var fileImgPath = await ManageImage.Upload(stdImgFile, fileName);
+
+              if(await ManageStudents.UpdateImgProfile(studentId, fileImgPath))
+                {
+                    return Ok(fileImgPath);
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, "Fialed to upload image");
+
+            }
+
+            return NotFound();
         }
 
 

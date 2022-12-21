@@ -18,6 +18,7 @@ namespace StudentAdminPortal.API.Repositories
 
         Task<Student> AddNewStudentAsync(Student newStudent);
 
+        Task<bool> UpdateImgProfile(Guid studentId,string imgProfile);
 
         //Gender Signatures
         Task<List<Gender>> GetGendersAsync();
