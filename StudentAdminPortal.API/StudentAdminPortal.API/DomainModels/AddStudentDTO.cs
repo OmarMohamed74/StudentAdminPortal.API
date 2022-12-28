@@ -1,4 +1,6 @@
-﻿namespace StudentAdminPortal.API.DomainModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace StudentAdminPortal.API.DomainModels
 {
     public class AddStudentDTO
     {

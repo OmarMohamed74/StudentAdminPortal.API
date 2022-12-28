@@ -92,24 +92,39 @@ namespace StudentAdminPortal.API.Controllers
                 _mapper.Map<Student>(student));
             
         }
+
         [HttpPost]
         [Route("[controller]/{studentId:guid}/uploadStdImg")]
+
         public async Task<IActionResult> UploadStdProfileImg([FromRoute] Guid studentId,IFormFile stdImgFile)
         {
-            var student = await ManageStudents.GetStudentByIdAsync(studentId);
 
-            string fileName = student.FirstName + Path.GetExtension(stdImgFile.FileName);
+            var validExtensionsList = new List<string> { ".jpeg", ".png", ".jpg",".gif" };
 
-            if (await ManageStudents.isStudentExsists(studentId))
-            {
-                var fileImgPath = await ManageImage.Upload(stdImgFile, fileName);
+            var imgExtension= Path.GetExtension(stdImgFile.FileName);
 
-              if(await ManageStudents.UpdateImgProfile(studentId, fileImgPath))
+            if (stdImgFile !=null && stdImgFile.Length > 0) {
+
+                if (validExtensionsList.Contains(imgExtension))
                 {
-                    return Ok(fileImgPath);
-                }
-                return StatusCode(StatusCodes.Status500InternalServerError, "Fialed to upload image");
 
+                    if (await ManageStudents.isStudentExsists(studentId))
+                      {
+                        var student = await ManageStudents.GetStudentByIdAsync(studentId);
+
+                        string fileName = student.FirstName + Path.GetExtension(stdImgFile.FileName);
+
+                        var fileImgPath = await ManageImage.Upload(stdImgFile, fileName);
+
+                        if (await ManageStudents.UpdateImgProfile(studentId, fileImgPath))
+                        {
+                            return Ok(fileImgPath);
+                        }
+                        return StatusCode(StatusCodes.Status500InternalServerError, "Fialed to upload image");
+
+                    }
+                }
+                return BadRequest("Invalid Img Format");
             }
 
             return NotFound();
